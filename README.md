@@ -2,12 +2,19 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
-[![Frameworks](https://img.shields.io/badge/Frameworks-EU%20DORA%20%7C%20ISO%2027001%20%7C%20EU%20PSD2-blue.svg)]()
+[![Frameworks](https://img.shields.io/badge/Frameworks-DORA%20%7C%20ISO%2027001%20%7C%20PSD2%20%7C%20EU%20AI%20Act-blue.svg)]()
 [![CI Pipeline](https://img.shields.io/badge/CI%2FCD-GitHub%20Actions%20Automated-green.svg)]()
 
-A modular **Compliance-as-Code** evaluation engine designed to continuously audit, verify, and document cloud infrastructure posture against European and global regulatory frameworks.
+A modular **Compliance-as-Code** evaluation engine designed to continuously audit, verify, and document cloud infrastructure and AI workloads against European and global regulatory frameworks.
 
-Instead of relying on manual point-in-time screenshots or passive questionnaire platforms (e.g., Vanta, Drata), this repository translates complex regulatory mandates—specifically **EU Digital Operational Resilience Act (DORA)**, **ISO/IEC 27001:2022**, and **EU Payment Services Directive 2 (PSD2)**—into **13 executable Python engines, active cloud telemetry checks, and automated daily CI/CD pipelines**.
+Instead of relying on manual point-in-time screenshots or passive questionnaire platforms (e.g., Vanta, Drata), this repository translates complex regulatory mandates—specifically **EU Digital Operational Resilience Act (DORA)**, **ISO/IEC 27001:2022**, **EU Payment Services Directive 2 (PSD2)**, and the **EU Artificial Intelligence Act (EU 2024/1689)**—into **executable Python engines, active cloud telemetry checks, and automated daily CI/CD pipelines**.
+
+---
+
+## 📚 Core System Documentation
+
+* **[Architecture & System Assumptions (`ARCHITECTURE.md`)](ARCHITECTURE.md):** Detailed breakdown of our pull-based telemetry model, zero-side-effect inspection design, fail-closed evidence guarantees, and multi-region AWS assumptions.
+* **[Contributing & Engineering Principles (`CONTRIBUTING.md`)](CONTRIBUTING.md):** Guidelines detailing our read-only execution standards, regulatory traceability rules, and code review checklists.
 
 ---
 
@@ -20,7 +27,7 @@ grc-engineering-suite/
 │   └── workflows/
 │       └── continuous-compliance.yml                 # Daily Automated CI/CD Audit Pipeline
 │
-├── dora/                                             # Module 1: EU DORA (Regulation 2022/2554)
+├── dora/                                             # Module 1: EU DORA (Regulation EU 2022/2554)
 │   ├── README.md
 │   ├── dora_art9_access_protection_auditor.py       # IAM MFA & Network Isolation
 │   ├── dora_art11_resilience_checker.py              # Cross-Region Failover & DNS
@@ -42,5 +49,13 @@ grc-engineering-suite/
 │   ├── psd2_art95_fraud_transaction_monitor.py      # Real-Time Fraud Telemetry Engine
 │   └── psd2_art95_audit_trail_logging_auditor.py    # 5-Year Payment Log Retention & KMS Encryption
 │
+├── eu-ai-act/                                        # Module 4: EU AI Act (Regulation EU 2024/1689)
+│   ├── README.md
+│   ├── eu_ai_act_art11_model_card_validator.py      # Model Technical Docs & Data Lineage
+│   ├── eu_ai_act_art12_telemetry_auditor.py         # Automated Inference Event Logging
+│   └── eu_ai_act_art9_risk_classifier.py            # System Tier Classification & Risk Safeguards
+│
+├── ARCHITECTURE.md                                   # System Architecture & Technical Assumptions
+├── CONTRIBUTING.md                                   # GRC Engineering Principles & Guidelines
 ├── README.md
 └── requirements.txt
