@@ -13,10 +13,10 @@ jobs:
 
     steps:
       - name: Checkout Repository Code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Set up Python Environment (3.10)
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: '3.10'
 
@@ -66,9 +66,10 @@ jobs:
           python eu-ai-act/eu_ai_act_art9_risk_classifier.py || true
 
       - name: Archive Compliance Audit Evidence Artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: regulatory-compliance-evidence-json
+          if-no-files-found: warn # Prevents pipeline crash if output JSON files aren't created
           path: |
             dora_article9_evidence.json
             dora_article11_evidence.json
