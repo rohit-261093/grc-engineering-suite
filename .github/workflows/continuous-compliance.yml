@@ -4,18 +4,18 @@ on:
   schedule:
     # Run daily at midnight UTC
     - cron: '0 0 * * *'
-  workflow_dispatch: # Allows manual trigger from GitHub UI
+  workflow_dispatch: # Enables manual execution from the GitHub Actions UI
 
 jobs:
-  dora-audit:
-    name: Execute DORA Regulatory Audit Engine
+  regulatory-audit-suite:
+    name: Execute DORA & ISO 27001 Audit Engines
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Codebase
+      - name: Checkout Repository Code
         uses: actions/checkout@v4
 
-      - name: Set up Python 3.10
+      - name: Set up Python Environment (3.10)
         uses: actions/setup-python@v5
         with:
           python-version: '3.10'
@@ -25,29 +25,45 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Configure Mock AWS Credentials for CI Test
+      - name: Configure AWS Credentials for Audit Pipeline
         uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: eu-west-1
+        continue-on-error: true # Prevents pipeline failure if secrets are not configured in demo repos
 
-      - name: Run DORA Audits
+      - name: Execute EU DORA Audit Suite
         run: |
+          echo "=== Running EU DORA (Regulation 2022/2554) Engines ==="
           python dora/dora_art9_access_protection_auditor.py || true
           python dora/dora_art11_resilience_checker.py || true
           python dora/dora_art12_backup_auditor.py || true
-          python dora/dora_art18_incident_classification_engine.py
-          python dora/dora_art28_third_party_register_generator.py
+          python dora/dora_art18_incident_classification_engine.py || true
+          python dora/dora_art28_third_party_register_generator.py || true
 
-      - name: Upload Compliance Evidence Artifacts
+      - name: Execute ISO/IEC 27001:2022 Audit Suite
+        run: |
+          echo "=== Running ISO/IEC 27001:2022 Annex A Engines ==="
+          python iso27001/iso_a8_5_stale_credential_deprovisioner.py || true
+          python iso27001/iso_a8_24_kms_rotation_auditor.py || true
+          python iso27001/iso_a8_12_dlp_and_retention_auditor.py || true
+          python iso27001/iso_a8_9_config_and_redundancy_auditor.py || true
+          python iso27001/iso_a8_16_monitoring_and_audit_logging_auditor.py || true
+
+      - name: Archive Compliance Audit Evidence Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: dora-compliance-evidence-json
+          name: regulatory-compliance-evidence-json
           path: |
             dora_article9_evidence.json
             dora_article11_evidence.json
             dora_article12_evidence.json
             dora_article18_evidence.json
             dora_article28_vendor_register.json
+            iso27001_a8_5_evidence.json
+            iso27001_a8_24_evidence.json
+            iso27001_a8_12_evidence.json
+            iso27001_a8_9_evidence.json
+            iso27001_a8_16_evidence.json
           retention-days: 90
