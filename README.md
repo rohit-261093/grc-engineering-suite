@@ -14,7 +14,11 @@ Instead of relying on manual point-in-time screenshots or passive questionnaire 
 ## 🗂️ Suite Modules
 
 ```text
-grc-engineering-suite/
+grc-engineering-suite/                <-- Root Directory
+│
+├── .github/                           <-- Root Level (Hidden Folder)
+│   └── workflows/
+│       └── continuous-compliance.yml  <-- Your Pipeline File
 │
 ├── dora/
 │   ├── dora_art9_access_protection_auditor.py       # Module 1: IAM MFA & Network Isolation
