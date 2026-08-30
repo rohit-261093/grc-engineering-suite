@@ -4,11 +4,11 @@ on:
   schedule:
     # Run daily at midnight UTC
     - cron: '0 0 * * *'
-  workflow_dispatch: # Enables manual execution from the GitHub Actions UI
+  workflow_dispatch: # Enables manual trigger execution from GitHub UI
 
 jobs:
   regulatory-audit-suite:
-    name: Execute DORA, ISO 27001 and PSD2 Audit Engines
+    name: Execute DORA, ISO 27001, PSD2 & EU AI Act Audit Suite
     runs-on: ubuntu-latest
 
     steps:
@@ -31,23 +31,39 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: eu-west-1
-        continue-on-error: true # Prevents pipeline failure if secrets are not configured in demo repos
+        continue-on-error: true # Prevents pipeline failure if secrets are missing in demo forks
 
-      - name: Execute EU DORA Audit Suite
+      - name: Execute EU DORA Audit Suite (Regulation EU 2022/2554)
         run: |
-          echo "=== Running EU DORA (Regulation 2022/2554) Engines ==="
+          echo "=== Running EU DORA Compliance Engines ==="
           python dora/dora_art9_access_protection_auditor.py || true
           python dora/dora_art11_resilience_checker.py || true
           python dora/dora_art12_backup_auditor.py || true
           python dora/dora_art18_incident_classification_engine.py || true
           python dora/dora_art28_third_party_register_generator.py || true
 
-      - name: Execute EU PSD2 Audit Suite
+      - name: Execute ISO/IEC 27001:2022 Annex A Audit Suite
         run: |
-          echo "=== Running EU PSD2 (Directive 2015/2366) Engines ==="
+          echo "=== Running ISO/IEC 27001:2022 Compliance Engines ==="
+          python iso27001/iso_a8_5_stale_credential_deprovisioner.py || true
+          python iso27001/iso_a8_24_kms_rotation_auditor.py || true
+          python iso27001/iso_a8_12_dlp_and_retention_auditor.py || true
+          python iso27001/iso_a8_9_config_and_redundancy_auditor.py || true
+          python iso27001/iso_a8_16_monitoring_and_audit_logging_auditor.py || true
+
+      - name: Execute EU PSD2 Audit Suite (Directive EU 2015/2366)
+        run: |
+          echo "=== Running EU PSD2 Compliance Engines ==="
           python psd2/psd2_art97_sca_mfa_auditor.py || true
           python psd2/psd2_art95_fraud_transaction_monitor.py || true
           python psd2/psd2_art95_audit_trail_logging_auditor.py || true
+
+      - name: Execute EU AI Act Governance Suite (Regulation EU 2024/1689)
+        run: |
+          echo "=== Running EU AI Act Compliance Engines ==="
+          python eu-ai-act/eu_ai_act_art11_model_card_validator.py || true
+          python eu-ai-act/eu_ai_act_art12_telemetry_auditor.py || true
+          python eu-ai-act/eu_ai_act_art9_risk_classifier.py || true
 
       - name: Archive Compliance Audit Evidence Artifacts
         uses: actions/upload-artifact@v4
@@ -67,4 +83,7 @@ jobs:
             psd2_article97_evidence.json
             psd2_article95_fraud_evidence.json
             psd2_article95_logging_evidence.json
+            eu_ai_act_article11_evidence.json
+            eu_ai_act_article12_evidence.json
+            eu_ai_act_article9_risk_evidence.json
           retention-days: 90
