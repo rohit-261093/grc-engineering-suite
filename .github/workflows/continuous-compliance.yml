@@ -25,13 +25,11 @@ jobs:
           python -m pip install --upgrade pip
           if [ -f requirements.txt ]; then pip install -r requirements.txt; else pip install boto3 botocore urllib3; fi
 
-      - name: Configure AWS Credentials for Audit Pipeline
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID || 'mock-access-key-id' }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY || 'mock-secret-access-key' }}
-          aws-region: eu-west-1
-        continue-on-error: true # Safe execution fallback for demo repositories
+      - name: Set Offline Mock AWS Environment
+        run: |
+          echo "AWS_DEFAULT_REGION=eu-west-1" >> $GITHUB_ENV
+          echo "AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID || 'mock-access-key-id' }}" >> $GITHUB_ENV
+          echo "AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY || 'mock-secret-access-key' }}" >> $GITHUB_ENV
 
       - name: Execute EU DORA Audit Suite (Regulation EU 2022/2554)
         run: |
