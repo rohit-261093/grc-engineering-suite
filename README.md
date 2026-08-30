@@ -1,7 +1,5 @@
 # GRC Engineering Suite: Continuous Compliance-as-Code
 
-Multi-framework Compliance-as-Code suite automating continuous resilience, identity, and data protection verification across cloud infrastructure. Enforces DORA, PSD2, ISO 27001, and SOC 2 controls programmatically.
-
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 [![Multi-Framework](https://img.shields.io/badge/Frameworks-DORA%20%7C%20ISO%2027001%20%7C%20SOC%202%20%7C%20PSD2-green.svg)]()
