@@ -8,7 +8,7 @@ on:
 
 jobs:
   regulatory-audit-suite:
-    name: Execute DORA & ISO 27001 Audit Engines
+    name: Execute DORA, ISO 27001 and PSD2 Audit Engines
     runs-on: ubuntu-latest
 
     steps:
@@ -42,14 +42,12 @@ jobs:
           python dora/dora_art18_incident_classification_engine.py || true
           python dora/dora_art28_third_party_register_generator.py || true
 
-      - name: Execute ISO/IEC 27001:2022 Audit Suite
+      - name: Execute EU PSD2 Audit Suite
         run: |
-          echo "=== Running ISO/IEC 27001:2022 Annex A Engines ==="
-          python iso27001/iso_a8_5_stale_credential_deprovisioner.py || true
-          python iso27001/iso_a8_24_kms_rotation_auditor.py || true
-          python iso27001/iso_a8_12_dlp_and_retention_auditor.py || true
-          python iso27001/iso_a8_9_config_and_redundancy_auditor.py || true
-          python iso27001/iso_a8_16_monitoring_and_audit_logging_auditor.py || true
+          echo "=== Running EU PSD2 (Directive 2015/2366) Engines ==="
+          python psd2/psd2_art97_sca_mfa_auditor.py || true
+          python psd2/psd2_art95_fraud_transaction_monitor.py || true
+          python psd2/psd2_art95_audit_trail_logging_auditor.py || true
 
       - name: Archive Compliance Audit Evidence Artifacts
         uses: actions/upload-artifact@v4
@@ -66,4 +64,7 @@ jobs:
             iso27001_a8_12_evidence.json
             iso27001_a8_9_evidence.json
             iso27001_a8_16_evidence.json
+            psd2_article97_evidence.json
+            psd2_article95_fraud_evidence.json
+            psd2_article95_logging_evidence.json
           retention-days: 90
