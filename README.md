@@ -28,7 +28,12 @@ grc-engineering-suite/                <-- Root Directory
 │   └── dora_art28_third_party_register_generator.py  # Module 5: TPRM Vendor RTS Register
 │
 ├── iso27001/               # Module 2: Access Control & Identity Audit (A.9 / A.5.15)
-│   └── [Coming Soon]
+│   ├── README.md
+│   ├── iso_a8_5_stale_credential_deprovisioner.py   # Stale Credential Deprovisioning
+│   ├── iso_a8_24_kms_rotation_auditor.py            # KMS Key Rotation & Deletion Windows
+│   ├── iso_a8_12_dlp_and_retention_auditor.py       # S3 Public Block (DLP) & Object Retention
+│   ├── iso_a8_9_config_and_redundancy_auditor.py    # EBS Default Encryption & Multi-AZ HA
+│   └── iso_a8_16_monitoring_and_audit_logging_auditor.py # CloudTrail & Log Integrity Validation
 │
 ├── soc2/                   # Module 3: Encryption & Key Management (CC6.1 / CC6.7)
 │   └── [Coming Soon]
