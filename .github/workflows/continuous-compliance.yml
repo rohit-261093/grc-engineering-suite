@@ -13,25 +13,25 @@ jobs:
 
     steps:
       - name: Checkout Repository Code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
 
       - name: Set up Python Environment (3.10)
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@v5
         with:
           python-version: '3.10'
 
       - name: Install Dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; else pip install boto3 botocore urllib3; fi
 
       - name: Configure AWS Credentials for Audit Pipeline
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID || 'mock-access-key-id' }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY || 'mock-secret-access-key' }}
           aws-region: eu-west-1
-        continue-on-error: true # Prevents pipeline failure if secrets are missing in demo forks
+        continue-on-error: true # Safe execution fallback for demo repositories
 
       - name: Execute EU DORA Audit Suite (Regulation EU 2022/2554)
         run: |
@@ -66,10 +66,10 @@ jobs:
           python eu-ai-act/eu_ai_act_art9_risk_classifier.py || true
 
       - name: Archive Compliance Audit Evidence Artifacts
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v4
         with:
           name: regulatory-compliance-evidence-json
-          if-no-files-found: warn # Prevents pipeline crash if output JSON files aren't created
+          if-no-files-found: warn
           path: |
             dora_article9_evidence.json
             dora_article11_evidence.json
